@@ -14,7 +14,11 @@ namespace Full_GRASP_And_SOLID
         // Cambiado por OCP
         private IList<BaseStep> steps = new List<BaseStep>();
 
+        private CountdownTimer timer = new CountdownTimer();
+        
         public Product FinalProduct { get; set; }
+
+        public bool Cooked { get; private set; } = false;
 
         // Agregado por Creator
         public void AddStep(Product input, double quantity, Equipment equipment, int time)
@@ -61,6 +65,39 @@ namespace Full_GRASP_And_SOLID
             }
 
             return result;
+        }
+
+        public int GetCookTime()
+        {
+            int time = 0;
+            foreach (BaseStep step in this.steps)
+            {
+                time += step.Time;
+            }
+            return time;
+        }
+
+        public void Cook()
+        {
+            TimerAdapter timerClient = new TimerAdapter(this);
+            this.timer.Register(GetCookTime(), timerClient);
+        }
+
+        private class TimerAdapter : TimerClient
+        {
+            private Recipe recipe;
+
+            public TimerAdapter(Recipe recipe)
+            {
+                this.recipe = recipe;
+            }
+
+            public object TimeOutId { get; }
+
+            public void TimeOut()
+            {
+                this.recipe.Cooked = true;
+            }
         }
     }
 }

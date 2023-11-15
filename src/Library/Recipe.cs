@@ -81,6 +81,7 @@ namespace Full_GRASP_And_SOLID
             timer.Register(GetCookTime(), new TimerAdapter(this));
         }
 
+        // Agregado por Adapter
         private class TimerAdapter : TimerClient
         {
             private Recipe recipe;

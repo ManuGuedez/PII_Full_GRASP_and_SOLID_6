@@ -13,8 +13,6 @@ namespace Full_GRASP_And_SOLID
     {
         // Cambiado por OCP
         private IList<BaseStep> steps = new List<BaseStep>();
-
-        private CountdownTimer timer = new CountdownTimer();
         
         public Product FinalProduct { get; set; }
 
@@ -79,8 +77,8 @@ namespace Full_GRASP_And_SOLID
 
         public void Cook()
         {
-            TimerAdapter timerClient = new TimerAdapter(this);
-            this.timer.Register(GetCookTime(), timerClient);
+            CountdownTimer timer = new CountdownTimer();
+            timer.Register(GetCookTime(), new TimerAdapter(this));
         }
 
         private class TimerAdapter : TimerClient
@@ -91,8 +89,6 @@ namespace Full_GRASP_And_SOLID
             {
                 this.recipe = recipe;
             }
-
-            public object TimeOutId { get; }
 
             public void TimeOut()
             {
